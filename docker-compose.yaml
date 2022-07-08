@@ -1,0 +1,37 @@
+version: "3"
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: "sharoo_backend"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./:/usr/src/app
+      - /usr/src/app/node_modules
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_USER: root
+      MYSQL_PASSWORD: wkdwogus1
+      MYSQL_DB: sharoo
+    depends_on: # depends_on에 정의된 서비스가 먼저 실행되고 이 서비스가 실행됨
+      - mysql
+      - redis-server
+    restart: always
+  mysql:
+    image: mysql:latest
+    restart: always # 오류나면 항상 재시작
+    ports:
+      - "3307:3306"
+    container_name: "sharoo_mysql"
+    volumes:
+      - sharoo-mysql-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: wkdwogus1
+      MYSQL_DATABASE: sharoo
+  redis-server:
+    image: "redis"
+    container_name: "sharoo_redis"
+volumes:
+  sharoo-mysql-data:
