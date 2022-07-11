@@ -14,15 +14,31 @@ class User extends Sequelize.Model {
                     unique: true,
                 },
                 password: {
-                    type: Sequelize.STRING,
+                    type: Sequelize.STRING(20),
                     allowNull: false,
+                },
+                sex: {
+                    type: Sequelize.CHAR(1),
+                    allowNull: false,
+                },
+                birthday: {
+                    type: Sequelize.DATEONLY,
+                    allowNull: false,
+                },
+                phone_number: {
+                    type: Sequelize.STRING(20),
+                    allowNull: false,
+                },
+                introduction: {
+                    type: Sequelize.TEXT,
+                    allowNull: true,
+                },
+                profile_image: {
+                    type: Sequelize.STRING,
+                    allowNull: true,
                 },
                 salt: {
-                    type: Sequelize.STRING,
-                    allowNull: false,
-                },
-                age: {
-                    type: Sequelize.INTEGER.UNSIGNED,
+                    type: Sequelize.STRING(64),
                     allowNull: false,
                 },
                 createdAt: {
@@ -44,7 +60,13 @@ class User extends Sequelize.Model {
         );
     }
 
-    static associate(db) {}
+    static associate(db) {
+        db.User.hasMany(db.House, {
+            foreignKey: 'user_id',
+            sourceKey: 'id',
+            onDelete: 'cascade',
+        });
+    }
 };
 
 module.exports = User;

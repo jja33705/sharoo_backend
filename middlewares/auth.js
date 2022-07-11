@@ -1,6 +1,13 @@
 const jwt = require('jsonwebtoken');
 
 const auth = (req, res, next) => {
+    // authorization header 없을 때
+    if (!req.headers.authorization) {
+        return res.status(401).json({
+            message: "authorization 헤더 없음",
+        });
+    }
+    
     const token = req.headers.authorization.split('Bearer ')[1];
 
     // access token 없을 때
@@ -10,16 +17,24 @@ const auth = (req, res, next) => {
         });
     }
 
-    const decoded = jwt.decode(token, process.env.JWT_SECRET);
+    try {
+        const decoded = jwt.decode(token, process.env.JWT_SECRET);
 
-    // access token 만료 됐을때
-    if (Date.now() >= decoded.exp * 1000) {
+        // access token 만료 됐을때
+        if (Date.now() >= decoded.exp * 1000) {
+            return res.status(401).json({
+                message: "TokenExpired",
+            });
+        }
+
+        // req에 유저 아이디 추가하고 원래 요청으로 이동
+        req.id = decoded.id;
+        next();
+    } catch(error) {
         return res.status(401).json({
-            message: "TokenExpired",
+            message: "token 이상함",
         });
     }
-
-    next();
 }
 
 module.exports = auth;
