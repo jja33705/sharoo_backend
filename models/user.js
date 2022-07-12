@@ -41,7 +41,7 @@ class User extends Sequelize.Model {
                     type: Sequelize.STRING(64),
                     allowNull: false,
                 },
-                createdAt: {
+                created_at: {
                     type: Sequelize.DATE,
                     allowNull: false,
                     defaultValue: Sequelize.NOW,
@@ -65,6 +65,20 @@ class User extends Sequelize.Model {
             foreignKey: 'user_id',
             sourceKey: 'id',
             onDelete: 'cascade',
+        });
+        db.User.hasMany(db.Review, {
+            foreignKey: 'writer_id',
+            sourceKey: 'id',
+            onDelete: 'cascade',
+        });
+        db.User.hasMany(db.Review, {
+            foreignKey: 'target_id',
+            sourceKey: 'id',
+            onDelete: 'cascade',
+        });
+        db.User.belongsToMany(db.House, {
+            foreignKey: 'user_id',
+            through: 'interest',
         });
     }
 };

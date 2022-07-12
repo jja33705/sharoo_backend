@@ -64,7 +64,7 @@ class House extends Sequelize.Model {
                     type: Sequelize.INTEGER.UNSIGNED,
                     allowNull: true,
                 },
-                createdAt: {
+                created_at: {
                     type: Sequelize.DATE,
                     allowNull: false,
                     defaultValue: Sequelize.NOW,
@@ -87,6 +87,11 @@ class House extends Sequelize.Model {
         db.House.belongsTo(db.User, {
             foreignKey: 'user_id',
             targetKey: 'id',
+            onDelete: 'cascade',
+        });
+        db.House.hasMany(db.Review, {
+            foreignKey: 'house_id',
+            sourceKey: 'id',
             onDelete: 'cascade',
         });
     }
