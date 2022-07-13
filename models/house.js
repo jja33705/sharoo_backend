@@ -82,7 +82,6 @@ class House extends Sequelize.Model {
             },
         );
     }
-
     static associate(db) {
         db.House.belongsTo(db.User, {
             foreignKey: 'user_id',
@@ -93,6 +92,15 @@ class House extends Sequelize.Model {
             foreignKey: 'house_id',
             sourceKey: 'id',
             onDelete: 'cascade',
+        });
+        db.House.hasMany(db.Image, {
+            foreignKey: 'house_id',
+            sourceKey: 'id',
+            onDelete: 'cascade',
+        });
+        db.House.belongsToMany(db.User, {
+            foreignKey: 'house_id',
+            through: 'interest',
         });
     }
 };
