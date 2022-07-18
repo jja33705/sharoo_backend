@@ -7,7 +7,7 @@ const router = express.Router();
 
 // 회원가입
 router.post('/register', async (req, res) => {
-    const { name, email, password, age } = req.body;
+    const { name, email, password, age, sex, birthday, phone_number } = req.body;
 
     // 이미 존재하는 이메일인지 체크
     const user = await User.findOne({
@@ -33,11 +33,14 @@ router.post('/register', async (req, res) => {
         password: hashedPassword,
         salt: salt,
         age: age,
-    })
+        sex: sex,
+        birthday: birthday,
+        phone_number: phone_number,
+    });
     return res.status(201).json({
         message: "회원가입 성공",
         user: newUser,
-    })
+    });
 });
 
 // 로그인

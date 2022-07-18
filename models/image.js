@@ -4,7 +4,7 @@ class Image extends Sequelize.Model {
     static init(sequelize) {
         return super.init(
             {
-                image: {
+                image_path: {
                     type: Sequelize.STRING,
                     allowNull: false,
                 },

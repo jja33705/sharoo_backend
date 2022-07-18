@@ -3,11 +3,23 @@ const indexRouter = require("./routes");
 const usersRouter = require("./routes/users");
 const housesRouter = require("./routes/houses");
 const path  = require("path");
+const fs = require('fs');
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const cors = require('cors');
 const db = require('./models');
+
 require('dotenv').config();
+
+if (!fs.existsSync('uploads')) {
+    fs.mkdirSync('uploads');
+}
+if (!fs.existsSync('uploads/images')) {
+    fs.mkdirSync('uploads/images');
+}
+if (!fs.existsSync('uploads/images/house')) {
+    fs.mkdirSync('uploads/images/house');
+}
 
 const app = express();
 

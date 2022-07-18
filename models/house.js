@@ -55,6 +55,7 @@ class House extends Sequelize.Model {
                 ended: {
                     type: Sequelize.BOOLEAN,
                     allowNull: false,
+                    defaultValue: false,
                 },
                 deposit: {
                     type: Sequelize.INTEGER.UNSIGNED,

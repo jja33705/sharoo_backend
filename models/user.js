@@ -14,7 +14,7 @@ class User extends Sequelize.Model {
                     unique: true,
                 },
                 password: {
-                    type: Sequelize.STRING(20),
+                    type: Sequelize.STRING,
                     allowNull: false,
                 },
                 sex: {
@@ -33,12 +33,12 @@ class User extends Sequelize.Model {
                     type: Sequelize.TEXT,
                     allowNull: true,
                 },
-                profile_image: {
+                profile_image_path: {
                     type: Sequelize.STRING,
                     allowNull: true,
                 },
                 salt: {
-                    type: Sequelize.STRING(64),
+                    type: Sequelize.STRING,
                     allowNull: false,
                 },
                 created_at: {
