@@ -6,7 +6,37 @@ const { House, Image } = require('../models');
 
 // 하우스 리스트
 router.get('/', async (req, res) => {
+    const { page, search, kind } = req.query;
 
+    // 페이지 없으면 1로 설정해주기
+    if (!page) {
+        page = 1
+    }
+
+    const houses = await House.findAll({ // 14개씩 페이지네이션
+        limit: 14,
+        offset: 14 * (page - 1),
+        include: [{
+            model: Image,
+        }],
+        order: [
+            [
+                'created_at',
+                'DESC',
+            ],
+        ],
+    });
+
+    // 조건에 맞는 하우스가 없을 때
+    if (houses.length === 0) {
+        return res.status(204).json({
+            message: '조건에 맞는 하우스가 없습니다.',
+        });
+    }
+
+    return res.status(200).json({
+        houses: houses,
+    });
 });
 
 // 하우스 등록
@@ -16,7 +46,7 @@ router.post('/', auth, uploadHouseImage.array('images'), async (req, res) => {
     // sequelize point 타입 객체 생성
     const point = { 
         type: 'Point',
-        coordinates: [lng, lat], // lng, lat
+        coordinates: [lng, lat],
     }
 
     const house = await House.create({

@@ -35,7 +35,8 @@ class User extends Sequelize.Model {
                 },
                 profile_image_path: {
                     type: Sequelize.STRING,
-                    allowNull: true,
+                    allowNull: false,
+                    defaultValue: 'uploads/images/profile/default_profile_image.jpeg',
                 },
                 salt: {
                     type: Sequelize.STRING,

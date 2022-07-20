@@ -20,6 +20,9 @@ if (!fs.existsSync('uploads/images')) {
 if (!fs.existsSync('uploads/images/house')) {
     fs.mkdirSync('uploads/images/house');
 }
+if (!fs.existsSync('uploads/images/profile')) {
+    fs.mkdirSync('uploads/images/profile');
+}
 
 const app = express();
 

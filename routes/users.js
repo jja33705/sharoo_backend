@@ -3,6 +3,8 @@ const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const redisClient = require("../utils/redis");
 const { User } = require('../models');
+const { uploadProfileImage } = require('../middlewares/upload');
+const auth = require('../middlewares/auth');
 const router = express.Router();
 
 // 회원가입
@@ -92,6 +94,31 @@ router.post('/login', async (req, res) => {
         message: '로그인 성공',
         accessToken: accessToken,
         user: user,
+    });
+});
+
+// 프로필 수정
+router.put('/editProfile', auth, uploadProfileImage.single('image'), async (req, res) => {
+    const { name, introduction } = req.body;
+
+    // 이미지 처리
+    let profile_image_path = 'uploads/images/profile/default_profile_image.jpeg';
+    if (req.file) {
+        profile_image_path = req.file.path;
+    }
+
+    await User.update({
+        name: name,
+        introduction: introduction,
+        profile_image_path: profile_image_path,
+    }, {
+        where: {
+            id: req.id,
+        },
+    });
+
+    return res.status(200).json({
+        message: '유저 정보 수정 완료',
     });
 });
 
