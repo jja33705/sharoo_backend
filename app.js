@@ -1,7 +1,8 @@
 const express = require("express");
 const indexRouter = require("./routes");
-const usersRouter = require("./routes/users");
-const housesRouter = require("./routes/houses");
+const userRouter = require("./routes/user");
+const houseRouter = require("./routes/house");
+const reviewRouter = require("./routes/review");
 const path  = require("path");
 const fs = require('fs');
 const cookieParser = require("cookie-parser");
@@ -45,7 +46,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/houses', housesRouter);
+app.use('/users', userRouter);
+app.use('/houses', houseRouter);
+app.use('/reviews', reviewRouter);
 
 module.exports = app;
