@@ -1,6 +1,6 @@
 const { House } = require('../models');
 
-const housePermissionCheck = async(req, res, next) => {
+const housePermissionCheck = async (req, res, next) => {
     const house = await House.findByPk(req.params.id);
 
     if (!house) {
