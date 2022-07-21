@@ -1,4 +1,5 @@
 const express = require('express');
+const fs = require('fs');
 const router = express.Router();
 const jwtAuthentication = require('../middlewares/jwtAuthentication');
 const housePermissionCheck = require('../middlewares/housePermissionCheck');
@@ -79,7 +80,7 @@ router.post('/', jwtAuthentication, uploadHouseImage.array('images'), async (req
         area: area,
         max_people: max_people,
         sex: sex,
-        start_date,
+        start_date: start_date,
         end_date: end_date,
         deposit: deposit,
         monthly_rent: monthly_rent,
@@ -104,13 +105,96 @@ router.post('/', jwtAuthentication, uploadHouseImage.array('images'), async (req
 });
 
 // 하우스 수정
-router.put('/:id', jwtAuthentication, housePermissionCheck, async (req, res) => {
-    const { title, description, address, lat, lng, kind, room_count, toilet_count, area, max_people, sex, start_date, end_date, deposit, monthly_rent } = req.body;
-    console.log(req.params.id);
+router.put('/:id', jwtAuthentication, housePermissionCheck, uploadHouseImage.array('images'), async (req, res) => {
+    const { title, description, address, lat, lng, kind, room_count, toilet_count, area, max_people, sex, start_date, end_date, deposit, monthly_rent, deletedImages } = req.body;
+    
+    const house = await House.findByPk(req.params.id);
+
+    // 프론트엔드에서 삭제 요청한 이미지 삭제
+    if (deletedImages) {
+        if (Array.isArray(deletedImages)) { // 삭제 요청한 이미지가 여러개여서 배열일 경우
+            for (const deletedImage of deletedImages) {
+                const image = await Image.findByPk(deletedImage);
+                fs.unlinkSync(image.image_path);
+                await Image.destroy({
+                    where: {
+                        id: image.id,
+                    },
+                });
+            }
+        } else { // 삭제 요청한 이미지가 한개일 경우
+            const image = await Image.findByPk(deletedImages)
+            fs.unlinkSync(image.image_path);
+            await Image.destroy({
+                where: {
+                    id: image.id,
+                },
+            });
+        }
+    }
+
+    // 새로운 이미지가 있으면 생성
+    if (req.files.length != 0) {
+        for (const file of req.files) {
+            const image = await Image.create({
+                image_path: file.path,
+            });
+            await house.addImage(image);
+        }
+    }
+
+    // sequelize point 타입 객체 생성
+    const point = { 
+        type: 'Point',
+        coordinates: [lng, lat],
+    }
+
+    await House.update({
+        title: title,
+        description: description,
+        address: address,
+        kind: kind,
+        room_count: room_count,
+        toilet_count: toilet_count,
+        area: area,
+        max_people: max_people,
+        sex: sex,
+        start_date: start_date,
+        end_date: end_date,
+        deposit: deposit,
+        monthly_rent: monthly_rent,
+        point: point,
+    }, {
+        where: {
+            id: req.params.id,
+        },
+    });
+
+    return res.status(200).json({
+        message: '하우스 정보 수정 완료',
+    });
 });
 
 // 하우스 삭제
 router.delete('/:id', jwtAuthentication, housePermissionCheck, async (req, res) => {
+    const images = await Image.findAll({
+        where: {
+            house_id: req.params.id,
+        },
+    });
+
+    // 이미지가 있으면 먼저 제거
+    if (images.length > 0) {
+        for (const image of images) {
+            fs.unlinkSync(image.image_path);
+            await Image.destroy({
+                where: {
+                    id: image.id,
+                },
+            });
+        }
+    }
+
     await House.destroy({
         where: {
             id: req.params.id,
