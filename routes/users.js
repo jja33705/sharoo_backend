@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const redisClient = require("../utils/redis");
 const { User } = require('../models');
 const { uploadProfileImage } = require('../middlewares/upload');
-const auth = require('../middlewares/auth');
+const jwtAuthentication = require('../middlewares/jwtAuthentication');
 const router = express.Router();
 
 // 회원가입
@@ -98,10 +98,10 @@ router.post('/login', async (req, res) => {
 });
 
 // 프로필 수정
-router.put('/editProfile', auth, uploadProfileImage.single('image'), async (req, res) => {
+router.put('/profile', jwtAuthentication, uploadProfileImage.single('image'), async (req, res) => {
     const { name, introduction } = req.body;
 
-    // 이미지 처리
+    // 이미지 없으면 기본 이미지
     let profile_image_path = 'uploads/images/profile/default_profile_image.jpeg';
     if (req.file) {
         profile_image_path = req.file.path;

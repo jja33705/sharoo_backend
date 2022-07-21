@@ -60,7 +60,6 @@ class User extends Sequelize.Model {
             },
         );
     }
-
     static associate(db) {
         db.User.hasMany(db.House, {
             foreignKey: 'user_id',

@@ -30,7 +30,6 @@ class Review extends Sequelize.Model {
             },
         );
     }
-
     static associate(db) {
         db.Review.belongsTo(db.User, {
             foreignKey: 'writer_id',

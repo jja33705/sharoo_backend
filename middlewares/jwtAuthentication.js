@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-const auth = (req, res, next) => {
+const jwtAuthentication = (req, res, next) => {
     // authorization header 없을 때
     if (!req.headers.authorization) {
         return res.status(401).json({
@@ -30,11 +30,11 @@ const auth = (req, res, next) => {
         // req에 유저 아이디 추가하고 원래 요청으로 이동
         req.id = decoded.id;
         next();
-    } catch(error) {
+    } catch(error) { // jwt decode하다가 문제 발생했을 때
         return res.status(401).json({
             message: "token 이상함",
         });
     }
 }
 
-module.exports = auth;
+module.exports = jwtAuthentication;

@@ -26,7 +26,6 @@ class Image extends Sequelize.Model {
             },
         );
     }
-
     static associate(db) {
         db.Image.belongsTo(db.House, {
             foreignKey: 'house_id',
