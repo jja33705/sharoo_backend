@@ -2,7 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const router = express.Router();
 const jwtAuthentication = require('../middlewares/jwtAuthentication');
-const housePermissionCheck = require('../middlewares/housePermissionCheck');
+const housePermissionCheck = require('../middlewares/housePermission');
 const { uploadHouseImage } = require('../middlewares/upload');
 const { House, Image, User } = require('../models');
 
