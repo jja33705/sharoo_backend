@@ -1,6 +1,6 @@
 const { House } = require('../models');
 
-const HousePermissionCheck = async(req, res, next) => {
+const housePermissionCheck = async(req, res, next) => {
     const house = await House.findByPk(req.params.id);
 
     if (!house) {
@@ -18,4 +18,4 @@ const HousePermissionCheck = async(req, res, next) => {
     next();
 };
 
-module.exports = HousePermissionCheck;
+module.exports = housePermissionCheck;

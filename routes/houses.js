@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const jwtAuthentication = require('../middlewares/jwtAuthentication');
-const housePermissionCheck = require('../middlewares/HousePermissionCheck');
+const housePermissionCheck = require('../middlewares/housePermissionCheck');
 const { uploadHouseImage } = require('../middlewares/upload');
 const { House, Image, User } = require('../models');
 
@@ -104,7 +104,7 @@ router.post('/', jwtAuthentication, uploadHouseImage.array('images'), async (req
 });
 
 // 하우스 수정
-router.put('/:id', jwtAuthentication, async (req, res) => {
+router.put('/:id', jwtAuthentication, housePermissionCheck, async (req, res) => {
     const { title, description, address, lat, lng, kind, room_count, toilet_count, area, max_people, sex, start_date, end_date, deposit, monthly_rent } = req.body;
     console.log(req.params.id);
 });
