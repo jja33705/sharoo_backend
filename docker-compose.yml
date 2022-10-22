@@ -1,0 +1,41 @@
+version: "3.7"
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: sharoo_backend
+    env_file: ./.env
+    ports:
+      - "$APP_LOCAL_PORT:$APP_DOCKER_PORT"
+    depends_on:
+      - db
+    networks:
+      - sharoo_backend
+    environment:
+      - DATABASE_HOST=$DATABASE_HOST
+      - MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD
+      - DATABASE_NAME=$DATABASE_NAME
+    volumes:
+      - ./src:/usr/server/src
+  db:
+    image: mysql:latest
+    container_name: sharoo_database
+    environment: 
+      - MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD
+    restart: always
+    ports:
+      - $DATABASE_LOCAL_PORT:$DATABASE_DOCKER_PORT
+    networks:
+      - sharoo_backend
+    volumes:
+      - ./db_volume:/var/lib/mysql
+      - ./my.cnf:/etc/mysql/conf.d/my.cnf
+    cap_add:
+      - SYS_NICE
+  
+networks:
+  sharoo_backend:
+  
+volumes:
+  sharoo_backend:
