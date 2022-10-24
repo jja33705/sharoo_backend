@@ -16,6 +16,8 @@ services:
       - DATABASE_HOST=$DATABASE_HOST
       - MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD
       - DATABASE_NAME=$DATABASE_NAME
+      - DATABASE_DOCKER_PORT=$DATABASE_DOCKER_PORT
+      - APP_DOCKER_PORT=$APP_DOCKER_PORT
     volumes:
       - ./src:/usr/server/src
   db:

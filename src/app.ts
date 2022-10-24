@@ -21,7 +21,9 @@ app.get('/test', (req: Request, res: Response, next: NextFunction) => {
     res.send('welcome!');
 });
 
-app.listen(3000, () => {
+const port: number = Number(process.env.APP_DOCKER_PORT)
+
+app.listen(port, () => {
     console.log(`
     ############################################
          Server listening on port: 3000
